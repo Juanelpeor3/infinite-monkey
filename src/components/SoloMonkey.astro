@@ -1,0 +1,86 @@
+<div>
+    <h1>Solo Monkey</h1>
+    <p>Welcome to the Solo Monkey page!</p>
+    <p id="actualChar"></p>
+    <p id="totalNum"></p>
+    <p id="allChars"></p>
+    <button id="newChar">Add character</button>
+</div>
+
+<script>
+    const actualChar = document.getElementById("actualChar");
+    const totalNum = document.getElementById("totalNum");
+    const allChars = document.getElementById("allChars");
+    const newCharBtn = document.getElementById("newChar");
+
+    let currentChar = "";
+    let totalChars = 0;
+    let characters = [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H",
+        "I",
+        "J",
+        "K",
+        "L",
+        "M",
+        "N",
+        "O",
+        "P",
+        "Q",
+        "R",
+        "S",
+        "T",
+        "U",
+        "V",
+        "W",
+        "X",
+        "Y",
+        "Z",
+        " ",
+        "\n",
+    ];
+    if (actualChar && totalNum && allChars && newCharBtn) {
+        function generateChar() {
+            const randomIndex = Math.floor(Math.random() * characters.length);
+            const newChar = characters[randomIndex];
+            currentChar = newChar;
+            totalChars++;
+            actualChar!.textContent = `Current character: ${currentChar}`;
+            totalNum!.textContent = `Total characters generated: ${totalChars}`;
+            allChars!.textContent += newChar;
+        }
+
+        newCharBtn.addEventListener("click", generateChar);
+
+        document.addEventListener("keydown", (e) => {
+            if (e.target instanceof HTMLButtonElement) return;
+            generateChar();
+        });
+    }
+</script>
+<style>
+    div {
+        text-align: center;
+        margin-top: 50px;
+    }
+
+    button {
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    p {
+        font-size: 18px;
+    }
+
+    #allChars {
+        white-space: pre-wrap;
+    }
+</style>
