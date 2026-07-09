@@ -1,9 +1,70 @@
 ---
-import SoloMonkey from "../components/SoloMonkey.astro";
-import Welcome from "../components/Welcome.astro";
 import Layout from "../layouts/Layout.astro";
 ---
 
 <Layout>
-	<SoloMonkey />
+	<main
+		class="max-w-175 mx-auto mt-15 px-6 font-serif text-[#222] leading-[1.7]"
+	>
+		<h1 class="text-[2.2rem] text-center mb-10 text-[#1a1a1a]">
+			The Infinite Monkey Theorem
+		</h1>
+
+		<section class="mb-8">
+			<p
+				class="text-[1.2rem] bg-[#f5f0e8] border-l-4 border-[#8b6f47] px-5 py-4 rounded"
+			>
+				If a monkey presses keys at random on a keyboard for an
+				<strong>infinite</strong> amount of time, it will eventually type
+				any given text, including the complete works of Shakespeare.
+			</p>
+		</section>
+
+		<section class="mb-8">
+			<h2 class="text-[1.4rem] mt-10 mb-3 text-[#333]">
+				How does it work?
+			</h2>
+			<p>
+				The theorem is based on probability. Each time the monkey
+				presses a key, there is a small but <em>non-zero</em> probability
+				that it is the correct character. With an infinite number of attempts,
+				any finite sequence of characters will appear with probability 1.
+			</p>
+			<p class="mt-4">
+				In mathematics this is known as the <strong
+					>Borel-Cantelli lemma</strong
+				>: if an event has a positive probability of occurring on each
+				attempt, it will occur infinitely many times given an infinite
+				number of attempts.
+			</p>
+		</section>
+
+		<section class="mb-8">
+			<h2 class="text-[1.4rem] mt-10 mb-3 text-[#333]">
+				An example to put it in perspective
+			</h2>
+			<p>
+				The probability of a monkey typing the word <em
+					>"SHAKESPEARE"</em
+				> (11 letters) by pressing random keys from 28 characters (26 letters,
+				space and newline) is:
+			</p>
+			<code
+				class="block bg-[#1e1e1e] text-[#d4d4d4] px-5 py-3 rounded-md text-base my-3 tracking-wider font-mono"
+			>
+				(1/28)¹¹ ≈ 1 in 17,537,720,524,288,000
+			</code>
+			<p>
+				Nearly impossible in one attempt, but <strong>inevitable</strong
+				> with infinite attempts.
+			</p>
+		</section>
+
+		<a
+			href="/bethemonkey"
+			class="block w-fit mx-auto mt-12 mb-15 bg-[#8b6f47] hover:bg-[#6b5237] text-white px-8 py-3.5 rounded-lg text-[1.1rem] font-sans no-underline transition-colors"
+		>
+			Try being the monkey →
+		</a>
+	</main>
 </Layout>

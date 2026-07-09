@@ -1,0 +1,122 @@
+<div class="max-w-5xl mx-auto mt-16 px-8 font-serif text-[#222]">
+    <h1 class="text-5xl text-center mb-12 text-[#1a1a1a] tracking-tight">
+        You are the Monkey
+    </h1>
+
+    <div class="flex gap-8 items-stretch">
+        <!-- Left: current state -->
+        <div
+            class="w-1/2 bg-[#f5f0e8] border-l-4 border-[#8b6f47] px-8 py-8 rounded-lg flex flex-col gap-6"
+        >
+            <h2 class="text-2xl text-[#333] font-semibold">Current state</h2>
+
+            <div>
+                <p
+                    class="text-sm uppercase tracking-widest text-[#8b6f47] mb-1"
+                >
+                    Current character
+                </p>
+                <p
+                    id="actualChar"
+                    class="text-7xl font-mono text-[#1a1a1a] leading-none"
+                >
+                    —
+                </p>
+            </div>
+
+            <div>
+                <p
+                    class="text-sm uppercase tracking-widest text-[#8b6f47] mb-1"
+                >
+                    Total generated
+                </p>
+                <p
+                    id="totalNum"
+                    class="text-5xl font-mono text-[#1a1a1a] leading-none"
+                >
+                    0
+                </p>
+            </div>
+
+            <button
+                id="newChar"
+                class="mt-auto bg-[#8b6f47] hover:bg-[#6b5237] text-white px-8 py-4 rounded-lg text-xl font-sans cursor-pointer transition-colors"
+            >
+                Add character
+            </button>
+        </div>
+
+        <!-- Right: all characters -->
+        <div class="w-1/2 flex flex-col gap-4">
+            <h2 class="text-2xl text-[#333] font-semibold">
+                Generated characters
+            </h2>
+            <pre
+                id="allChars"
+                class="bg-[#1e1e1e] text-[#d4d4d4] px-6 py-5 rounded-lg text-xl font-mono whitespace-pre-wrap w-full flex-1 h-72 overflow-y-auto leading-relaxed">
+            </pre>
+        </div>
+    </div>
+</div>
+
+<script>
+    const actualChar = document.getElementById("actualChar");
+    const totalNum = document.getElementById("totalNum");
+    const allChars = document.getElementById("allChars");
+    const newCharBtn = document.getElementById("newChar");
+
+    let totalChars = 0;
+    const characters = [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H",
+        "I",
+        "J",
+        "K",
+        "L",
+        "M",
+        "N",
+        "O",
+        "P",
+        "Q",
+        "R",
+        "S",
+        "T",
+        "U",
+        "V",
+        "W",
+        "X",
+        "Y",
+        "Z",
+        " ",
+        "\n",
+    ];
+
+    if (actualChar && totalNum && allChars && newCharBtn) {
+        allChars.textContent = "";
+
+        function generateChar() {
+            const randomIndex = Math.floor(Math.random() * characters.length);
+            const newChar = characters[randomIndex];
+            totalChars++;
+            actualChar!.textContent =
+                newChar === "\n" ? "↵" : newChar === " " ? "␣" : newChar;
+            totalNum!.textContent = String(totalChars);
+            allChars!.textContent += newChar;
+            allChars!.scrollTop = allChars!.scrollHeight;
+        }
+
+        newCharBtn.addEventListener("click", generateChar);
+
+        document.addEventListener("keydown", (e) => {
+            if (e.target instanceof HTMLButtonElement) return;
+            e.preventDefault();
+            generateChar();
+        });
+    }
+</script>
