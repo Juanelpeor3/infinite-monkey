@@ -98,7 +98,11 @@
     ];
 
     if (actualChar && totalNum && allChars && newCharBtn) {
-        allChars.textContent = "";
+        const saved = localStorage.getItem("monkeyChars") ?? "";
+        totalChars = saved.length;
+        allChars.textContent = saved;
+        totalNum.textContent = String(totalChars);
+        allChars.scrollTop = allChars.scrollHeight;
 
         function generateChar() {
             const randomIndex = Math.floor(Math.random() * characters.length);
@@ -109,6 +113,7 @@
             totalNum!.textContent = String(totalChars);
             allChars!.textContent += newChar;
             allChars!.scrollTop = allChars!.scrollHeight;
+            localStorage.setItem("monkeyChars", allChars!.textContent);
         }
 
         newCharBtn.addEventListener("click", generateChar);
