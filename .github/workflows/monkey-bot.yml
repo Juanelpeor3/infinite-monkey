@@ -1,0 +1,53 @@
+name: Monkey Bot
+
+on:
+  schedule:
+    - cron: "0 * * * *" # every hour
+  workflow_dispatch:
+    inputs:
+      count:
+        description: "Number of characters to generate"
+        default: "50"
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate random characters
+        run: |
+          node - <<'EOF'
+          const fs = require("fs");
+          const path = "src/data/monkey-bot.json";
+
+          const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ \n";
+          const count = parseInt(process.env.COUNT || "50");
+
+          const current = JSON.parse(fs.readFileSync(path, "utf8"));
+
+          let newChars = "";
+          for (let i = 0; i < count; i++) {
+            newChars += characters[Math.floor(Math.random() * characters.length)];
+          }
+
+          current.chars += newChars;
+          current.total = current.chars.length;
+          current.lastUpdated = new Date().toISOString();
+
+          fs.writeFileSync(path, JSON.stringify(current, null, 2));
+          console.log(`Generated ${count} characters. Total: ${current.total}`);
+          EOF
+        env:
+          COUNT: ${{ github.event.inputs.count || '50' }}
+
+      - name: Commit and push
+        run: |
+          git config user.name "Monkey Bot"
+          git config user.email "monkey-bot@github-actions"
+          git add src/data/monkey-bot.json
+          git commit -m "🐒 monkey bot: +${{ github.event.inputs.count || '50' }} chars"
+          git push
