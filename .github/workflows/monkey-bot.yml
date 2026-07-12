@@ -2,7 +2,7 @@ name: Monkey Bot
 
 on:
   schedule:
-    - cron: "0 * * * *" # every hour
+    - cron: "30 * * * *" # every hour
   workflow_dispatch:
     inputs:
       count:
