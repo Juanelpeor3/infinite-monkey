@@ -1,0 +1,109 @@
+---
+import data from "../data/monkey-bot.json";
+
+const { chars, total, lastUpdated } = data;
+const words = chars
+    .trim()
+    .split(/[\s\n]+/)
+    .filter((w: string) => w.length > 0).length;
+const lastUpdatedFormatted = lastUpdated
+    ? new Date(lastUpdated).toLocaleString("en-GB", {
+          dateStyle: "medium",
+          timeStyle: "short",
+      })
+    : "Never";
+---
+
+<div
+    class="max-w-5xl mx-auto mt-8 sm:mt-16 px-4 sm:px-8 font-serif text-[#222]"
+>
+    <h1
+        class="text-3xl sm:text-4xl md:text-5xl text-center mb-2 text-[#1a1a1a] tracking-tight"
+    >
+        The Bot Monkey
+    </h1>
+    <p
+        class="text-center text-[#8b6f47] font-sans mb-6 sm:mb-10 text-xs sm:text-sm tracking-widest uppercase px-2"
+    >
+        Automated character generation · runs every hour
+    </p>
+
+    <div class="flex flex-col lg:flex-row gap-6 lg:gap-8 items-stretch">
+        <!-- Left: stats -->
+        <div
+            class="w-full lg:w-1/2 bg-[#f5f0e8] border-l-4 border-[#8b6f47] px-5 sm:px-8 py-6 sm:py-8 rounded-lg flex flex-col gap-6 sm:gap-8"
+        >
+            <h2 class="text-lg sm:text-xl text-[#333] font-semibold">Stats</h2>
+
+            <div class="flex gap-6 sm:gap-8 flex-wrap">
+                <div>
+                    <p
+                        class="text-xs uppercase tracking-widest text-[#8b6f47] mb-1"
+                    >
+                        Total chars
+                    </p>
+                    <p
+                        class="text-3xl sm:text-4xl font-mono text-[#1a1a1a] leading-none"
+                    >
+                        {total}
+                    </p>
+                </div>
+                <div>
+                    <p
+                        class="text-xs uppercase tracking-widest text-[#8b6f47] mb-1"
+                    >
+                        Words (~)
+                    </p>
+                    <p
+                        class="text-3xl sm:text-4xl font-mono text-[#1a1a1a] leading-none"
+                    >
+                        {words}
+                    </p>
+                </div>
+            </div>
+
+            <div>
+                <p
+                    class="text-xs uppercase tracking-widest text-[#8b6f47] mb-1"
+                >
+                    Last updated
+                </p>
+                <p
+                    class="text-base sm:text-lg font-mono text-[#1a1a1a] break-words"
+                >
+                    {lastUpdatedFormatted}
+                </p>
+            </div>
+
+            <div class="mt-auto text-xs font-sans text-[#999] leading-relaxed">
+                This page is generated at build time. Characters are added
+                automatically every hour via GitHub Actions and the site
+                rebuilds on each commit.
+            </div>
+        </div>
+
+        <!-- Right: all characters -->
+        <div class="w-full lg:w-1/2 flex flex-col gap-3">
+            <div class="flex items-center justify-between">
+                <h2 class="text-lg sm:text-xl text-[#333] font-semibold">
+                    Generated characters
+                </h2>
+                <span
+                    class="text-xs font-sans bg-[#8b6f47] text-white px-3 py-1 rounded-full"
+                    >{total}</span
+                >
+            </div>
+            {
+                total === 0 ? (
+                    <div class="bg-[#1e1e1e] text-[#666] px-4 sm:px-6 py-4 sm:py-5 rounded-lg text-base sm:text-lg font-mono h-56 sm:h-72 lg:h-80 flex items-center justify-center text-center">
+                        No characters yet. The bot will start soon.
+                    </div>
+                ) : (
+                    <pre class="bg-[#1e1e1e] text-[#d4d4d4] px-4 sm:px-6 py-4 sm:py-5 rounded-lg text-base sm:text-lg font-mono whitespace-pre-wrap w-full h-56 sm:h-72 lg:h-80 overflow-y-auto leading-relaxed">
+                        {chars}
+                    </pre>
+                )
+            }
+        </div>
+    </div>
+</div>
