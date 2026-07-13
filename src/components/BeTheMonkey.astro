@@ -1,49 +1,77 @@
-<div class="max-w-5xl mx-auto mt-16 px-8 font-serif text-[#222]">
-    <h1 class="text-5xl text-center mb-2 text-[#1a1a1a] tracking-tight">
+<div
+    class="max-w-5xl mx-auto mt-8 sm:mt-16 px-4 sm:px-8 font-serif text-[#222]"
+>
+    <h1
+        class="text-3xl sm:text-4xl md:text-5xl text-center mb-2 text-[#1a1a1a] tracking-tight"
+    >
         You are the Monkey
     </h1>
-    <p class="text-center text-[#8b6f47] font-sans mb-10 text-sm tracking-widest uppercase">
+    <p
+        class="text-center text-[#8b6f47] font-sans mb-6 sm:mb-10 text-xs sm:text-sm tracking-widest uppercase px-2"
+    >
         Press any key or click the button
     </p>
 
-    <div class="flex gap-8 items-stretch">
-
+    <div class="flex flex-col lg:flex-row gap-6 lg:gap-8 items-stretch">
         <!-- Left: current state -->
-        <div class="w-1/2 bg-[#f5f0e8] border-l-4 border-[#8b6f47] px-8 py-8 rounded-lg flex flex-col gap-8">
-
+        <div
+            class="w-full lg:w-1/2 bg-[#f5f0e8] border-l-4 border-[#8b6f47] px-5 sm:px-8 py-6 sm:py-8 rounded-lg flex flex-col gap-6 sm:gap-8"
+        >
             <div>
-                <p class="text-xs uppercase tracking-widest text-[#8b6f47] mb-2">Current character</p>
+                <p
+                    class="text-xs uppercase tracking-widest text-[#8b6f47] mb-2"
+                >
+                    Current character
+                </p>
                 <div
                     id="actualChar"
                     aria-live="polite"
                     aria-label="Current character"
-                    class="text-8xl font-mono text-[#1a1a1a] leading-none w-24 h-24 flex items-center justify-center bg-white rounded-xl shadow-sm border border-[#e0d5c5]"
+                    class="text-6xl sm:text-7xl md:text-8xl font-mono text-[#1a1a1a] leading-none w-20 h-20 sm:w-24 sm:h-24 flex items-center justify-center bg-white rounded-xl shadow-sm border border-[#e0d5c5]"
                 >
                     —
                 </div>
             </div>
 
-            <div class="flex gap-6">
+            <div class="flex gap-6 sm:gap-8 flex-wrap">
                 <div>
-                    <p class="text-xs uppercase tracking-widest text-[#8b6f47] mb-1">Total</p>
-                    <p id="totalNum" class="text-4xl font-mono text-[#1a1a1a] leading-none">0</p>
+                    <p
+                        class="text-xs uppercase tracking-widest text-[#8b6f47] mb-1"
+                    >
+                        Total
+                    </p>
+                    <p
+                        id="totalNum"
+                        class="text-3xl sm:text-4xl font-mono text-[#1a1a1a] leading-none"
+                    >
+                        0
+                    </p>
                 </div>
                 <div>
-                    <p class="text-xs uppercase tracking-widest text-[#8b6f47] mb-1">Words (~)</p>
-                    <p id="wordCount" class="text-4xl font-mono text-[#1a1a1a] leading-none">0</p>
+                    <p
+                        class="text-xs uppercase tracking-widest text-[#8b6f47] mb-1"
+                    >
+                        Words (~)
+                    </p>
+                    <p
+                        id="wordCount"
+                        class="text-3xl sm:text-4xl font-mono text-[#1a1a1a] leading-none"
+                    >
+                        0
+                    </p>
                 </div>
             </div>
 
             <div class="flex flex-col gap-3 mt-auto">
                 <button
                     id="newChar"
-                    class="w-full bg-[#8b6f47] hover:bg-[#6b5237] active:scale-95 text-white px-8 py-4 rounded-lg text-lg font-sans cursor-pointer transition-all"
+                    class="w-full bg-[#8b6f47] hover:bg-[#6b5237] active:scale-95 text-white px-6 sm:px-8 py-3.5 sm:py-4 rounded-lg text-base sm:text-lg font-sans cursor-pointer transition-all"
                 >
                     Add character
                 </button>
                 <button
                     id="clearBtn"
-                    class="w-full bg-white hover:bg-red-50 active:scale-95 text-red-400 hover:text-red-600 border border-red-200 px-8 py-3 rounded-lg text-sm font-sans cursor-pointer transition-all"
+                    class="w-full bg-white hover:bg-red-50 active:scale-95 text-red-400 hover:text-red-600 border border-red-200 px-6 sm:px-8 py-2.5 sm:py-3 rounded-lg text-sm font-sans cursor-pointer transition-all"
                 >
                     Clear all
                 </button>
@@ -51,18 +79,23 @@
         </div>
 
         <!-- Right: all characters -->
-        <div class="w-1/2 flex flex-col gap-3">
+        <div class="w-full lg:w-1/2 flex flex-col gap-3">
             <div class="flex items-center justify-between">
-                <h2 class="text-xl text-[#333] font-semibold">Generated characters</h2>
-                <span id="charBadge" class="text-xs font-sans bg-[#8b6f47] text-white px-3 py-1 rounded-full">0</span>
+                <h2 class="text-lg sm:text-xl text-[#333] font-semibold">
+                    Generated characters
+                </h2>
+                <span
+                    id="charBadge"
+                    class="text-xs font-sans bg-[#8b6f47] text-white px-3 py-1 rounded-full"
+                    >0</span
+                >
             </div>
             <pre
                 id="allChars"
                 aria-label="All generated characters"
-                class="bg-[#1e1e1e] text-[#d4d4d4] px-6 py-5 rounded-lg text-lg font-mono whitespace-pre-wrap w-full flex-1 h-80 overflow-y-auto leading-relaxed"
-            ></pre>
+                class="bg-[#1e1e1e] text-[#d4d4d4] px-4 sm:px-6 py-4 sm:py-5 rounded-lg text-base sm:text-lg font-mono whitespace-pre-wrap break-words w-full flex-1 h-56 sm:h-72 lg:h-80 overflow-y-auto leading-relaxed">
+            </pre>
         </div>
-
     </div>
 </div>
 
@@ -77,15 +110,43 @@
 
     let totalChars = 0;
     const characters = [
-        "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
-        "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
-        " ", "\n",
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H",
+        "I",
+        "J",
+        "K",
+        "L",
+        "M",
+        "N",
+        "O",
+        "P",
+        "Q",
+        "R",
+        "S",
+        "T",
+        "U",
+        "V",
+        "W",
+        "X",
+        "Y",
+        "Z",
+        " ",
+        "\n",
     ];
 
     function updateStats() {
         totalNum!.textContent = String(totalChars);
         charBadge!.textContent = String(totalChars);
-        const words = (allChars!.textContent ?? "").trim().split(/[\s\n]+/).filter(w => w.length > 0).length;
+        const words = (allChars!.textContent ?? "")
+            .trim()
+            .split(/[\s\n]+/)
+            .filter((w) => w.length > 0).length;
         wordCount!.textContent = String(words);
     }
 
@@ -100,7 +161,8 @@
             const randomIndex = Math.floor(Math.random() * characters.length);
             const newChar = characters[randomIndex];
             totalChars++;
-            actualChar!.textContent = newChar === "\n" ? "↵" : newChar === " " ? "␣" : newChar;
+            actualChar!.textContent =
+                newChar === "\n" ? "↵" : newChar === " " ? "␣" : newChar;
             allChars!.textContent += newChar;
             allChars!.scrollTop = allChars!.scrollHeight;
             updateStats();
