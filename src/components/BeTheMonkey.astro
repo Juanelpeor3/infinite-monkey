@@ -1,5 +1,5 @@
 ---
-import WordSearch from "./WordSearch.astro";
+import CharDisplay from "./CharDisplay.astro";
 ---
 
 <div
@@ -83,24 +83,7 @@ import WordSearch from "./WordSearch.astro";
         </div>
 
         <!-- Right: all characters -->
-        <div class="w-full lg:w-1/2 flex flex-col gap-3">
-            <div class="flex items-center justify-between">
-                <h2 class="text-lg sm:text-xl text-[#333] font-semibold">
-                    Generated characters
-                </h2>
-                <span
-                    id="charBadge"
-                    class="text-xs font-sans bg-[#8b6f47] text-white px-3 py-1 rounded-full"
-                    >0</span
-                >
-            </div>
-            <WordSearch sourceId="allChars" />
-            <pre
-                id="allChars"
-                aria-label="All generated characters"
-                class="bg-[#1e1e1e] text-[#d4d4d4] px-4 sm:px-6 py-4 sm:py-5 rounded-lg text-base sm:text-lg font-mono whitespace-pre-wrap w-full flex-1 h-56 sm:h-72 lg:h-80 overflow-y-auto leading-relaxed"
-            ></pre>
-        </div>
+        <CharDisplay />
     </div>
 </div>
 

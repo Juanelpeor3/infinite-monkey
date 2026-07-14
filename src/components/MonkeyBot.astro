@@ -1,6 +1,6 @@
 ---
 import data from "../data/monkey-bot.json";
-import WordSearch from "./WordSearch.astro";
+import CharDisplay from "./CharDisplay.astro";
 
 const { chars, total, lastUpdated } = data;
 const words = chars
@@ -82,25 +82,6 @@ const lastUpdatedFormatted = lastUpdated
         </div>
 
         <!-- Right: all characters -->
-        <div class="w-full lg:w-1/2 flex flex-col gap-3">
-            <div class="flex items-center justify-between">
-                <h2 class="text-lg sm:text-xl text-[#333] font-semibold">
-                    Generated characters
-                </h2>
-                <span
-                    class="text-xs font-sans bg-[#8b6f47] text-white px-3 py-1 rounded-full"
-                    >{total}</span
-                >
-            </div>
-            {
-                total === 0 ? (
-                    <div class="bg-[#1e1e1e] text-[#666] px-4 sm:px-6 py-4 sm:py-5 rounded-lg text-base sm:text-lg font-mono h-56 sm:h-72 lg:h-80 flex items-center justify-center text-center">
-                        No characters yet. The bot will start soon.
-                    </div>
-                ) : (
-                    <WordSearch chars={chars} />
-                )
-            }
-        </div>
+        <CharDisplay chars={chars} total={total} />
     </div>
 </div>
