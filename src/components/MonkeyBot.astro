@@ -1,5 +1,6 @@
 ---
 import data from "../data/monkey-bot.json";
+import WordSearch from "./WordSearch.astro";
 
 const { chars, total, lastUpdated } = data;
 const words = chars
@@ -97,9 +98,7 @@ const lastUpdatedFormatted = lastUpdated
                         No characters yet. The bot will start soon.
                     </div>
                 ) : (
-                    <pre class="bg-[#1e1e1e] text-[#d4d4d4] px-4 sm:px-6 py-4 sm:py-5 rounded-lg text-base sm:text-lg font-mono whitespace-pre-wrap w-full h-56 sm:h-72 lg:h-80 overflow-y-auto leading-relaxed">
-                        {chars}
-                    </pre>
+                    <WordSearch chars={chars} />
                 )
             }
         </div>

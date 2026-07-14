@@ -1,3 +1,7 @@
+---
+import WordSearch from "./WordSearch.astro";
+---
+
 <div
     class="max-w-5xl mx-auto mt-8 sm:mt-16 px-4 sm:px-8 font-serif text-[#222]"
 >
@@ -90,11 +94,12 @@
                     >0</span
                 >
             </div>
+            <WordSearch sourceId="allChars" />
             <pre
                 id="allChars"
                 aria-label="All generated characters"
-                class="bg-[#1e1e1e] text-[#d4d4d4] px-4 sm:px-6 py-4 sm:py-5 rounded-lg text-base sm:text-lg font-mono whitespace-pre-wrap w-full flex-1 h-56 sm:h-72 lg:h-80 overflow-y-auto leading-relaxed">
-            </pre>
+                class="bg-[#1e1e1e] text-[#d4d4d4] px-4 sm:px-6 py-4 sm:py-5 rounded-lg text-base sm:text-lg font-mono whitespace-pre-wrap w-full flex-1 h-56 sm:h-72 lg:h-80 overflow-y-auto leading-relaxed"
+            ></pre>
         </div>
     </div>
 </div>
@@ -107,37 +112,15 @@
     const allChars = document.getElementById("allChars");
     const newCharBtn = document.getElementById("newChar");
     const clearBtn = document.getElementById("clearBtn");
+    const searchInput = document.getElementById(
+        "word-search-input",
+    ) as HTMLInputElement;
 
     let totalChars = 0;
     const characters = [
-        "A",
-        "B",
-        "C",
-        "D",
-        "E",
-        "F",
-        "G",
-        "H",
-        "I",
-        "J",
-        "K",
-        "L",
-        "M",
-        "N",
-        "O",
-        "P",
-        "Q",
-        "R",
-        "S",
-        "T",
-        "U",
-        "V",
-        "W",
-        "X",
-        "Y",
-        "Z",
-        " ",
-        "\n",
+        "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
+        "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
+        " ", "\n",
     ];
 
     function updateStats() {
@@ -167,6 +150,8 @@
             allChars!.scrollTop = allChars!.scrollHeight;
             updateStats();
             localStorage.setItem("monkeyChars", allChars!.textContent);
+            if (searchInput.value.trim())
+                searchInput.dispatchEvent(new Event("input"));
         }
 
         clearBtn.addEventListener("click", () => {
@@ -175,12 +160,15 @@
             totalChars = 0;
             updateStats();
             localStorage.removeItem("monkeyChars");
+            searchInput.value = "";
+            searchInput.dispatchEvent(new Event("input"));
         });
 
         newCharBtn.addEventListener("click", generateChar);
 
         document.addEventListener("keydown", (e) => {
             if (e.target instanceof HTMLButtonElement) return;
+            if (e.target instanceof HTMLInputElement) return;
             e.preventDefault();
             generateChar();
         });

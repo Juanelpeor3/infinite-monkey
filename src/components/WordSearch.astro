@@ -1,0 +1,114 @@
+---
+interface Props {
+    chars?: string;
+    sourceId?: string;
+}
+
+const { chars, sourceId } = Astro.props;
+---
+
+<div class="flex flex-col gap-3">
+    <div class="flex items-center gap-3">
+        <input
+            id="word-search-input"
+            type="text"
+            placeholder="Search for a word..."
+            data-source-id={sourceId ?? ""}
+            class="flex-1 bg-[#f5f0e8] border border-[#c9b99a] rounded-lg px-4 py-2 font-mono text-sm text-[#1a1a1a] placeholder-[#b0926a] focus:outline-none focus:border-[#8b6f47]"
+        />
+        <span
+            id="word-search-count"
+            class="text-xs font-sans text-[#8b6f47] whitespace-nowrap min-w-15 text-right"
+        ></span>
+    </div>
+
+    {
+        sourceId ? (
+            <pre
+                id="word-search-highlight"
+                aria-hidden="true"
+                class="hidden bg-[#1e1e1e] text-[#d4d4d4] px-4 sm:px-6 py-4 sm:py-5 rounded-lg text-base sm:text-lg font-mono whitespace-pre-wrap w-full h-56 sm:h-72 lg:h-80 overflow-y-auto leading-relaxed"
+            />
+        ) : (
+            <pre
+                id="word-search-output"
+                class="bg-[#1e1e1e] text-[#d4d4d4] px-4 sm:px-6 py-4 sm:py-5 rounded-lg text-base sm:text-lg font-mono whitespace-pre-wrap w-full h-56 sm:h-72 lg:h-80 overflow-y-auto leading-relaxed"
+                data-chars={chars}
+            >
+                {chars || "No characters yet."}
+            </pre>
+        )
+    }
+</div>
+
+<script>
+    const input = document.getElementById(
+        "word-search-input",
+    ) as HTMLInputElement;
+    const countEl = document.getElementById(
+        "word-search-count",
+    ) as HTMLElement;
+
+    const sourceId = input.dataset.sourceId || null;
+    const sourceEl = sourceId ? document.getElementById(sourceId) : null;
+    const highlightEl = document.getElementById(
+        "word-search-highlight",
+    ) as HTMLElement | null;
+    const outputEl = document.getElementById(
+        "word-search-output",
+    ) as HTMLElement | null;
+
+    const staticRaw = outputEl?.dataset.chars ?? "";
+
+    function getText() {
+        return sourceEl ? (sourceEl.textContent ?? "") : staticRaw;
+    }
+
+    input.addEventListener("input", () => {
+        const query = input.value.trim();
+        const text = getText();
+
+        if (!query) {
+            countEl.textContent = "";
+            if (sourceEl) {
+                sourceEl.classList.remove("hidden");
+                highlightEl?.classList.add("hidden");
+            } else if (outputEl) {
+                outputEl.innerHTML = escapeHtml(text) || "No characters yet.";
+            }
+            return;
+        }
+
+        const matches = text.match(new RegExp(escapeRegex(query), "gi"));
+        const count = matches ? matches.length : 0;
+        countEl.textContent =
+            count === 0
+                ? "0 matches"
+                : `${count} match${count !== 1 ? "es" : ""}`;
+
+        const highlighted = escapeHtml(text).replace(
+            new RegExp(escapeRegex(escapeHtml(query)), "gi"),
+            (m) =>
+                `<mark class="bg-[#8b6f47] text-white rounded px-0.5">${m}</mark>`,
+        );
+
+        if (sourceEl && highlightEl) {
+            highlightEl.innerHTML = highlighted;
+            sourceEl.classList.add("hidden");
+            highlightEl.classList.remove("hidden");
+        } else if (outputEl) {
+            outputEl.innerHTML = highlighted;
+        }
+    });
+
+    function escapeHtml(str: string) {
+        return str
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;");
+    }
+
+    function escapeRegex(str: string) {
+        return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    }
+</script>
