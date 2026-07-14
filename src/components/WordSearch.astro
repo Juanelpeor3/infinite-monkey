@@ -27,12 +27,12 @@ const { chars, sourceId } = Astro.props;
             <pre
                 id="word-search-highlight"
                 aria-hidden="true"
-                class="hidden bg-[#1e1e1e] text-[#d4d4d4] px-4 sm:px-6 py-4 sm:py-5 rounded-lg text-base sm:text-lg font-mono whitespace-pre-wrap w-full h-56 sm:h-72 lg:h-80 overflow-y-auto leading-relaxed"
+                class="hidden bg-[#1e1e1e] text-[#d4d4d4] px-4 sm:px-6 py-4 sm:py-5 rounded-lg text-base sm:text-lg font-mono whitespace-pre-wrap w-full flex-1 h-56 sm:h-72 lg:h-80 overflow-y-auto leading-relaxed"
             />
         ) : (
             <pre
                 id="word-search-output"
-                class="bg-[#1e1e1e] text-[#d4d4d4] px-4 sm:px-6 py-4 sm:py-5 rounded-lg text-base sm:text-lg font-mono whitespace-pre-wrap w-full h-56 sm:h-72 lg:h-80 overflow-y-auto leading-relaxed"
+                class="bg-[#1e1e1e] text-[#d4d4d4] px-4 sm:px-6 py-4 sm:py-5 rounded-lg text-base sm:text-lg font-mono whitespace-pre-wrap w-full flex-1 h-56 sm:h-72 lg:h-80 overflow-y-auto leading-relaxed"
                 data-chars={chars}
             >
                 {chars || "No characters yet."}
