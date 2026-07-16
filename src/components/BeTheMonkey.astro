@@ -1,5 +1,13 @@
 ---
 import CharDisplay from "./CharDisplay.astro";
+import { translations, type Lang } from "../i18n/translations";
+
+interface Props {
+    lang?: Lang;
+}
+
+const { lang = "es" } = Astro.props;
+const t = translations[lang].beTheMonkey;
 ---
 
 <div
@@ -8,12 +16,12 @@ import CharDisplay from "./CharDisplay.astro";
     <h1
         class="text-3xl sm:text-4xl md:text-5xl text-center mb-2 text-[#1a1a1a] tracking-tight"
     >
-        You are the Monkey
+        {t.title}
     </h1>
     <p
         class="text-center text-[#8b6f47] font-sans mb-6 sm:mb-10 text-xs sm:text-sm tracking-widest uppercase px-2"
     >
-        Press any key or click the button
+        {t.subtitle}
     </p>
 
     <div class="flex flex-col lg:flex-row gap-6 lg:gap-8 items-stretch">
@@ -25,7 +33,7 @@ import CharDisplay from "./CharDisplay.astro";
                 <p
                     class="text-xs uppercase tracking-widest text-[#8b6f47] mb-2"
                 >
-                    Current character
+                    {t.currentChar}
                 </p>
                 <div
                     id="actualChar"
@@ -42,7 +50,7 @@ import CharDisplay from "./CharDisplay.astro";
                     <p
                         class="text-xs uppercase tracking-widest text-[#8b6f47] mb-1"
                     >
-                        Total
+                        {t.total}
                     </p>
                     <p
                         id="totalNum"
@@ -55,7 +63,7 @@ import CharDisplay from "./CharDisplay.astro";
                     <p
                         class="text-xs uppercase tracking-widest text-[#8b6f47] mb-1"
                     >
-                        Words (~)
+                        {t.words}
                     </p>
                     <p
                         id="wordCount"
@@ -71,19 +79,19 @@ import CharDisplay from "./CharDisplay.astro";
                     id="newChar"
                     class="w-full bg-[#8b6f47] hover:bg-[#6b5237] active:scale-95 text-white px-6 sm:px-8 py-3.5 sm:py-4 rounded-lg text-base sm:text-lg font-sans cursor-pointer transition-all"
                 >
-                    Add character
+                    {t.addChar}
                 </button>
                 <button
                     id="clearBtn"
                     class="w-full bg-white hover:bg-red-50 active:scale-95 text-red-400 hover:text-red-600 border border-red-200 px-6 sm:px-8 py-2.5 sm:py-3 rounded-lg text-sm font-sans cursor-pointer transition-all"
                 >
-                    Clear all
+                    {t.clearAll}
                 </button>
             </div>
         </div>
 
         <!-- Right: all characters -->
-        <CharDisplay />
+        <CharDisplay lang={lang} />
     </div>
 </div>
 

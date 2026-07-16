@@ -1,5 +1,6 @@
 ---
 import WordSearch from "./WordSearch.astro";
+import { translations, type Lang } from "../i18n/translations";
 
 interface Props {
     // Static mode (MonkeyBot)
@@ -8,6 +9,7 @@ interface Props {
     // Dynamic mode (BeTheMonkey)
     charsId?: string;
     badgeId?: string;
+    lang?: Lang;
 }
 
 const {
@@ -15,15 +17,17 @@ const {
     total,
     charsId = "allChars",
     badgeId = "charBadge",
+    lang = "es",
 } = Astro.props;
 
+const t = translations[lang].charDisplay;
 const isStatic = chars !== undefined;
 ---
 
 <div class="w-full lg:w-1/2 flex flex-col gap-3">
     <div class="flex items-center justify-between">
         <h2 class="text-lg sm:text-xl text-[#333] font-semibold">
-            Generated characters
+            {t.title}
         </h2>
         {
             isStatic ? (
@@ -45,14 +49,14 @@ const isStatic = chars !== undefined;
         isStatic ? (
             total === 0 ? (
                 <div class="bg-[#1e1e1e] text-[#666] px-4 sm:px-6 py-4 sm:py-5 rounded-lg text-base sm:text-lg font-mono h-56 sm:h-72 lg:h-80 flex items-center justify-center text-center">
-                    No characters yet. The bot will start soon.
+                    {t.noChars}
                 </div>
             ) : (
-                <WordSearch chars={chars} />
+                <WordSearch chars={chars} lang={lang} />
             )
         ) : (
             <>
-                <WordSearch sourceId={charsId} />
+                <WordSearch sourceId={charsId} lang={lang} />
                 <pre
                     id={charsId}
                     aria-label="All generated characters"

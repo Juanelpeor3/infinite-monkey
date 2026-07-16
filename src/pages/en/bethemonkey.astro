@@ -1,9 +1,9 @@
 ---
-import BeTheMonkey from "../components/BeTheMonkey.astro";
-import Layout from "../layouts/Layout.astro";
-import { translations } from "../i18n/translations";
+import BeTheMonkey from "../../components/BeTheMonkey.astro";
+import Layout from "../../layouts/Layout.astro";
+import { translations } from "../../i18n/translations";
 
-const lang = "es" as const;
+const lang = "en" as const;
 const t = translations[lang];
 ---
 
@@ -11,7 +11,7 @@ const t = translations[lang];
     <BeTheMonkey lang={lang} />
     <div class="text-center mb-15">
         <a
-            href="/"
+            href="/en"
             class="mt-12 inline-block bg-[#8b6f47] hover:bg-[#6b5237] text-white px-8 py-3.5 rounded-lg text-[1.1rem] font-sans no-underline transition-colors"
         >
             {t.nav.back}

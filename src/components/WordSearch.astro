@@ -1,18 +1,28 @@
 ---
+import { translations, type Lang } from "../i18n/translations";
+
 interface Props {
     chars?: string;
     sourceId?: string;
+    lang?: Lang;
 }
 
-const { chars, sourceId } = Astro.props;
+const { chars, sourceId, lang = "es" } = Astro.props;
+const t = translations[lang].wordSearch;
+const strings = JSON.stringify({
+    noChars: t.noChars,
+    zeroMatches: t.zeroMatches,
+    match: t.match,
+    matches: t.matches,
+});
 ---
 
-<div class="flex flex-col gap-3">
+<div class="flex flex-col gap-3" data-ws-strings={strings}>
     <div class="flex items-center gap-3">
         <input
             id="word-search-input"
             type="text"
-            placeholder="Search for a word..."
+            placeholder={t.placeholder}
             data-source-id={sourceId ?? ""}
             class="flex-1 bg-[#f5f0e8] border border-[#c9b99a] rounded-lg px-4 py-2 font-mono text-sm text-[#1a1a1a] placeholder-[#b0926a] focus:outline-none focus:border-[#8b6f47]"
         />
@@ -35,7 +45,7 @@ const { chars, sourceId } = Astro.props;
                 class="bg-[#1e1e1e] text-[#d4d4d4] px-4 sm:px-6 py-4 sm:py-5 rounded-lg text-base sm:text-lg font-mono whitespace-pre-wrap w-full flex-1 h-56 sm:h-72 lg:h-80 overflow-y-auto leading-relaxed"
                 data-chars={chars}
             >
-                {chars || "No characters yet."}
+                {chars || t.noChars}
             </pre>
         )
     }
@@ -48,6 +58,9 @@ const { chars, sourceId } = Astro.props;
     const countEl = document.getElementById(
         "word-search-count",
     ) as HTMLElement;
+
+    const container = input.closest("[data-ws-strings]") as HTMLElement;
+    const strings = JSON.parse(container.dataset.wsStrings!);
 
     const sourceId = input.dataset.sourceId || null;
     const sourceEl = sourceId ? document.getElementById(sourceId) : null;
@@ -74,7 +87,7 @@ const { chars, sourceId } = Astro.props;
                 sourceEl.classList.remove("hidden");
                 highlightEl?.classList.add("hidden");
             } else if (outputEl) {
-                outputEl.innerHTML = escapeHtml(text) || "No characters yet.";
+                outputEl.innerHTML = escapeHtml(text) || strings.noChars;
             }
             return;
         }
@@ -83,8 +96,8 @@ const { chars, sourceId } = Astro.props;
         const count = matches ? matches.length : 0;
         countEl.textContent =
             count === 0
-                ? "0 matches"
-                : `${count} match${count !== 1 ? "es" : ""}`;
+                ? strings.zeroMatches
+                : `${count} ${count !== 1 ? strings.matches : strings.match}`;
 
         const highlighted = escapeHtml(text).replace(
             new RegExp(escapeRegex(escapeHtml(query)), "gi"),

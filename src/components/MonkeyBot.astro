@@ -1,6 +1,15 @@
 ---
 import data from "../data/monkey-bot.json";
 import CharDisplay from "./CharDisplay.astro";
+import { translations, type Lang } from "../i18n/translations";
+
+interface Props {
+    lang?: Lang;
+}
+
+const { lang = "es" } = Astro.props;
+const t = translations[lang].monkeyBot;
+const dateLocale = lang === "es" ? "es-ES" : "en-GB";
 
 const { chars, total, lastUpdated } = data;
 const words = chars
@@ -8,11 +17,11 @@ const words = chars
     .split(/[\s\n]+/)
     .filter((w: string) => w.length > 0).length;
 const lastUpdatedFormatted = lastUpdated
-    ? new Date(lastUpdated).toLocaleString("en-GB", {
+    ? new Date(lastUpdated).toLocaleString(dateLocale, {
           dateStyle: "medium",
           timeStyle: "short",
       })
-    : "Never";
+    : t.never;
 ---
 
 <div
@@ -21,12 +30,12 @@ const lastUpdatedFormatted = lastUpdated
     <h1
         class="text-3xl sm:text-4xl md:text-5xl text-center mb-2 text-[#1a1a1a] tracking-tight"
     >
-        The Bot Monkey
+        {t.title}
     </h1>
     <p
         class="text-center text-[#8b6f47] font-sans mb-6 sm:mb-10 text-xs sm:text-sm tracking-widest uppercase px-2"
     >
-        Automated character generation · runs every hour
+        {t.subtitle}
     </p>
 
     <div class="flex flex-col lg:flex-row gap-6 lg:gap-8 items-stretch">
@@ -34,40 +43,30 @@ const lastUpdatedFormatted = lastUpdated
         <div
             class="w-full lg:w-1/2 bg-[#f5f0e8] border-l-4 border-[#8b6f47] px-5 sm:px-8 py-6 sm:py-8 rounded-lg flex flex-col gap-6 sm:gap-8"
         >
-            <h2 class="text-lg sm:text-xl text-[#333] font-semibold">Stats</h2>
+            <h2 class="text-lg sm:text-xl text-[#333] font-semibold">{t.stats}</h2>
 
             <div class="flex gap-6 sm:gap-8 flex-wrap">
                 <div>
-                    <p
-                        class="text-xs uppercase tracking-widest text-[#8b6f47] mb-1"
-                    >
-                        Total chars
+                    <p class="text-xs uppercase tracking-widest text-[#8b6f47] mb-1">
+                        {t.totalChars}
                     </p>
-                    <p
-                        class="text-3xl sm:text-4xl font-mono text-[#1a1a1a] leading-none"
-                    >
+                    <p class="text-3xl sm:text-4xl font-mono text-[#1a1a1a] leading-none">
                         {total}
                     </p>
                 </div>
                 <div>
-                    <p
-                        class="text-xs uppercase tracking-widest text-[#8b6f47] mb-1"
-                    >
-                        Words (~)
+                    <p class="text-xs uppercase tracking-widest text-[#8b6f47] mb-1">
+                        {t.words}
                     </p>
-                    <p
-                        class="text-3xl sm:text-4xl font-mono text-[#1a1a1a] leading-none"
-                    >
+                    <p class="text-3xl sm:text-4xl font-mono text-[#1a1a1a] leading-none">
                         {words}
                     </p>
                 </div>
             </div>
 
             <div>
-                <p
-                    class="text-xs uppercase tracking-widest text-[#8b6f47] mb-1"
-                >
-                    Last updated
+                <p class="text-xs uppercase tracking-widest text-[#8b6f47] mb-1">
+                    {t.lastUpdated}
                 </p>
                 <p class="text-base sm:text-lg font-mono text-[#1a1a1a]">
                     {lastUpdatedFormatted}
@@ -75,13 +74,11 @@ const lastUpdatedFormatted = lastUpdated
             </div>
 
             <div class="mt-auto text-xs font-sans text-[#999] leading-relaxed">
-                This page is generated at build time. Characters are added
-                automatically every hour via GitHub Actions and the site
-                rebuilds on each commit.
+                {t.footer}
             </div>
         </div>
 
         <!-- Right: all characters -->
-        <CharDisplay chars={chars} total={total} />
+        <CharDisplay chars={chars} total={total} lang={lang} />
     </div>
 </div>

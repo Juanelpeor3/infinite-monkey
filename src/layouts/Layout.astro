@@ -1,19 +1,31 @@
 ---
 import "../styles/global.css";
 import Footer from "../components/Footer.astro";
+import LangToggle from "../components/LangToggle.astro";
+import { translations, type Lang } from "../i18n/translations";
+
+interface Props {
+    lang?: Lang;
+}
+
+const { lang = "es" } = Astro.props;
+const t = translations[lang];
 ---
 
 <!doctype html>
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Infinite Monkey Theorem</title>
-	</head>
-	<body>
-		<slot />
-		<Footer />
-	</body>
+<html lang={lang}>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <meta name="generator" content={Astro.generator} />
+        <title>{t.siteTitle}</title>
+    </head>
+    <body>
+        <div class="flex justify-end px-4 pt-4">
+            <LangToggle lang={lang} />
+        </div>
+        <slot />
+        <Footer lang={lang} />
+    </body>
 </html>

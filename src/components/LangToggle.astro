@@ -1,0 +1,26 @@
+---
+import type { Lang } from "../i18n/translations";
+
+interface Props {
+    lang: Lang;
+}
+
+const { lang } = Astro.props;
+const path = Astro.url.pathname;
+
+let altUrl: string;
+if (lang === "es") {
+    altUrl = "/en" + (path === "/" ? "" : path);
+} else {
+    altUrl = path.replace(/^\/en/, "") || "/";
+}
+
+const altLabel = lang === "es" ? "EN" : "ES";
+---
+
+<a
+    href={altUrl}
+    class="text-xs font-sans tracking-widest uppercase text-[#8b6f47] border border-[#8b6f47] px-3 py-1 rounded-full hover:bg-[#8b6f47] hover:text-white transition-colors"
+>
+    {altLabel}
+</a>
