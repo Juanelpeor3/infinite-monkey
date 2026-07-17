@@ -17,7 +17,7 @@ const strings = JSON.stringify({
 });
 ---
 
-<div class="flex flex-col gap-3" data-ws-strings={strings}>
+<div class="flex flex-col gap-3" data-ws-strings={strings} data-lang={lang}>
     <div class="flex items-center gap-3">
         <input
             id="word-search-input"
@@ -55,9 +55,7 @@ const strings = JSON.stringify({
     const input = document.getElementById(
         "word-search-input",
     ) as HTMLInputElement;
-    const countEl = document.getElementById(
-        "word-search-count",
-    ) as HTMLElement;
+    const countEl = document.getElementById("word-search-count") as HTMLElement;
 
     const container = input.closest("[data-ws-strings]") as HTMLElement;
     const strings = JSON.parse(container.dataset.wsStrings!);
@@ -94,6 +92,10 @@ const strings = JSON.stringify({
 
         const matches = text.match(new RegExp(escapeRegex(query), "gi"));
         const count = matches ? matches.length : 0;
+
+        if (query.toLowerCase() === "shakespeare" && count > 0)
+            triggerShakespeare();
+
         countEl.textContent =
             count === 0
                 ? strings.zeroMatches
@@ -113,6 +115,63 @@ const strings = JSON.stringify({
             outputEl.innerHTML = highlighted;
         }
     });
+
+    const lang = (container.dataset.lang || "es") as "es" | "en";
+    const shakespeareMsgs = {
+        es: {
+            title: "¡Lo consiguió!",
+            msg: "El mono ha escrito SHAKESPEARE.\nEl teorema es real.",
+            close: "Haz clic para cerrar",
+        },
+        en: {
+            title: "It happened!",
+            msg: "The monkey typed SHAKESPEARE.\nThe theorem is real.",
+            close: "Click to close",
+        },
+    };
+
+    function triggerShakespeare() {
+        if (document.getElementById("shakespeare-overlay")) return;
+        const sm = shakespeareMsgs[lang];
+        const overlay = document.createElement("div");
+        overlay.id = "shakespeare-overlay";
+        overlay.style.cssText =
+            "position:fixed;inset:0;background:rgba(0,0,0,0.88);display:flex;align-items:center;justify-content:center;z-index:9999;cursor:pointer;";
+        overlay.innerHTML = `
+            <div style="text-align:center;color:white;font-family:serif;padding:2rem;max-width:420px">
+                <div style="font-size:3.5rem;margin-bottom:1rem">🎉🐒🎉</div>
+                <h2 style="font-size:2rem;margin-bottom:1rem;color:#f5d000;font-family:serif">${sm.title}</h2>
+                <p style="font-size:1.1rem;color:#d4d4d4;white-space:pre-line;line-height:1.6">${sm.msg}</p>
+                <p style="margin-top:2rem;font-size:0.75rem;color:#666;font-family:sans-serif">${sm.close}</p>
+            </div>`;
+        overlay.addEventListener("click", () => overlay.remove());
+        document.body.appendChild(overlay);
+        spawnConfetti();
+    }
+
+    function spawnConfetti() {
+        const style = document.createElement("style");
+        style.textContent =
+            "@keyframes confettiFall{to{transform:translateY(110vh) rotate(720deg);opacity:0}}";
+        document.head.appendChild(style);
+        const colors = [
+            "#f5d000",
+            "#8b6f47",
+            "#d4d4d4",
+            "#ff6b6b",
+            "#4ecdc4",
+            "#fff",
+        ];
+        for (let i = 0; i < 80; i++) {
+            setTimeout(() => {
+                const c = document.createElement("div");
+                const size = 4 + Math.random() * 8;
+                c.style.cssText = `position:fixed;top:-10px;left:${Math.random() * 100}%;width:${size}px;height:${size}px;background:${colors[Math.floor(Math.random() * colors.length)]};border-radius:${Math.random() > 0.5 ? "50%" : "2px"};pointer-events:none;z-index:10000;animation:confettiFall ${1 + Math.random() * 2}s ease-in ${Math.random() * 0.5}s forwards;`;
+                document.body.appendChild(c);
+                c.addEventListener("animationend", () => c.remove());
+            }, Math.random() * 800);
+        }
+    }
 
     function escapeHtml(str: string) {
         return str

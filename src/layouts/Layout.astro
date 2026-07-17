@@ -29,3 +29,45 @@ const t = translations[lang];
         <Footer lang={lang} />
     </body>
 </html>
+
+<script>
+    let clickCount = 0;
+    let clickTimer: ReturnType<typeof setTimeout>;
+
+    document.querySelectorAll("h1").forEach((h1) => {
+        h1.style.cursor = "default";
+        h1.addEventListener("click", () => {
+            clickCount++;
+            clearTimeout(clickTimer);
+            clickTimer = setTimeout(() => {
+                clickCount = 0;
+            }, 1500);
+            if (clickCount >= 7) {
+                clickCount = 0;
+                rainBananas();
+            }
+        });
+    });
+
+    function rainBananas() {
+        if (!document.getElementById("banana-style")) {
+            const s = document.createElement("style");
+            s.id = "banana-style";
+            s.textContent =
+                "@keyframes bananaFall{0%{transform:translateY(-60px) rotate(0deg);opacity:1}100%{transform:translateY(110vh) rotate(720deg);opacity:0.6}}";
+            document.head.appendChild(s);
+        }
+        for (let i = 0; i < 30; i++) {
+            setTimeout(
+                () => {
+                    const b = document.createElement("span");
+                    b.textContent = "🍌";
+                    b.style.cssText = `position:fixed;top:-60px;left:${Math.random() * 95}vw;font-size:${18 + Math.random() * 22}px;pointer-events:none;z-index:9998;animation:bananaFall ${1.5 + Math.random() * 2}s ease-in forwards;`;
+                    document.body.appendChild(b);
+                    b.addEventListener("animationend", () => b.remove());
+                },
+                i * 80 + Math.random() * 60,
+            );
+        }
+    }
+</script>
