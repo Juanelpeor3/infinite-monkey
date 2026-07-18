@@ -1,46 +1,69 @@
-# Astro Starter Kit: Basics
+# Infinite Monkey Theorem
 
-```sh
-pnpm create astro@latest -- --template basics
+A web app based on the **Infinite Monkey Theorem** — if a monkey presses keys at random for an infinite amount of time, it will eventually type any text, including the complete works of Shakespeare.
+
+Built with [Astro](https://astro.build) and [Tailwind CSS](https://tailwindcss.com).
+
+## Features
+
+- **Home** — explanation of the theorem with probability math
+- **Be the Monkey** — type characters manually and watch your progress. Characters are saved in `localStorage`
+- **Bot Monkey** — automated character generation via GitHub Actions (runs every hour), with live stats
+- **Word search** — search for any word across generated characters, with highlighted matches
+- **i18n** — Spanish (default) and English (`/en/`)
+- **Easter eggs** — try clicking the title 7 times, or searching for "shakespeare"
+
+## Stack
+
+| Tool | Version |
+|------|---------|
+| Astro | ^7 |
+| Tailwind CSS | ^4 |
+| Node | >=22.12 |
+
+## Getting started
+
+```bash
+npm install
+npm run dev
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
-
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
+```bash
+npm run build
+npm run preview
 ```
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+## Project structure
 
-## 🧞 Commands
+```
+src/
+├── components/
+│   ├── BeTheMonkey.astro   # Interactive monkey page
+│   ├── MonkeyBot.astro     # Bot stats page
+│   ├── CharDisplay.astro   # Generated characters panel
+│   ├── WordSearch.astro    # Search bar with highlighting
+│   ├── LangToggle.astro    # ES/EN switcher
+│   └── Footer.astro
+├── i18n/
+│   └── translations.ts     # All UI strings in ES and EN
+├── layouts/
+│   └── Layout.astro
+├── pages/
+│   ├── index.astro         # Home (ES)
+│   ├── bethemonkey.astro
+│   ├── monkey-bot.astro
+│   └── en/                 # English routes
+│       ├── index.astro
+│       ├── bethemonkey.astro
+│       └── monkey-bot.astro
+└── data/
+    └── monkey-bot.json     # Generated characters + metadata
+```
 
-All commands are run from the root of the project, from a terminal:
+## Automation
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `pnpm install`             | Installs dependencies                            |
-| `pnpm dev`             | Starts local dev server at `localhost:4321`      |
-| `pnpm build`           | Build your production site to `./dist/`          |
-| `pnpm preview`         | Preview your build locally, before deploying     |
-| `pnpm astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `pnpm astro -- --help` | Get help using the Astro CLI                     |
+The bot adds 50 random characters every hour via a GitHub Actions workflow. Each run commits to `monkey-bot.json` and triggers a site rebuild.
 
-## 👀 Want to learn more?
+## Made by
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+[Juanelpeor3](https://github.com/Juanelpeor3)
