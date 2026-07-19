@@ -103,8 +103,7 @@ const strings = JSON.stringify({
 
         const highlighted = escapeHtml(text).replace(
             new RegExp(escapeRegex(escapeHtml(query)), "gi"),
-            (m) =>
-                `<mark class="bg-[#8b6f47] text-white rounded px-0.5">${m}</mark>`,
+            (m) => `<mark class="bg-[#8b6f47] text-white rounded">${m}</mark>`,
         );
 
         if (sourceEl && highlightEl) {
