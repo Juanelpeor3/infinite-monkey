@@ -64,6 +64,10 @@ src/
 
 The bot adds 50 random characters every hour via a GitHub Actions workflow. Each run commits to `monkey-bot.json` and triggers a site rebuild.
 
+## License
+
+This project is licensed under the [MIT License](LICENSE.md).
+
 ## Made by
 
 [Juanelpeor3](https://github.com/Juanelpeor3)
