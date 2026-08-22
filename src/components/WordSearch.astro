@@ -8,7 +8,8 @@ interface Props {
 }
 
 const { chars, sourceId, lang = "es" } = Astro.props;
-const t = translations[lang].wordSearch;
+const safeLang = (lang ?? "es") as Lang;
+const t = translations[safeLang].wordSearch;
 const strings = JSON.stringify({
     noChars: t.noChars,
     zeroMatches: t.zeroMatches,
@@ -17,7 +18,7 @@ const strings = JSON.stringify({
 });
 ---
 
-<div class="flex flex-col gap-3" data-ws-strings={strings} data-lang={lang}>
+<div class="flex flex-col gap-3" data-ws-strings={strings} data-lang={safeLang}>
     <div class="flex items-center gap-2">
         <input
             id="word-search-input"
@@ -97,13 +98,7 @@ const strings = JSON.stringify({
     }
 
     function scrollToMark(mark: HTMLElement) {
-        const scrollEl = getScrollContainer();
-        if (!scrollEl) return;
-        // Absolute position of the mark within the scrollable content
-        const markTop = mark.getBoundingClientRect().top
-            - scrollEl.getBoundingClientRect().top
-            + scrollEl.scrollTop;
-        scrollEl.scrollTop = markTop - scrollEl.clientHeight / 2 + mark.getBoundingClientRect().height / 2;
+        mark.scrollIntoView({ block: "center", behavior: "smooth" });
     }
 
     function applyActive() {
