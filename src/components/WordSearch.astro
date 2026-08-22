@@ -18,7 +18,7 @@ const strings = JSON.stringify({
 ---
 
 <div class="flex flex-col gap-3" data-ws-strings={strings} data-lang={lang}>
-    <div class="flex items-center gap-3">
+    <div class="flex items-center gap-2">
         <input
             id="word-search-input"
             type="text"
@@ -28,8 +28,18 @@ const strings = JSON.stringify({
         />
         <span
             id="word-search-count"
-            class="text-xs font-sans text-[#8b6f47] whitespace-nowrap min-w-15 text-right"
+            class="text-xs font-sans text-[#8b6f47] whitespace-nowrap"
         ></span>
+        <button
+            id="ws-prev"
+            class="hidden w-7 h-7 items-center justify-center rounded-lg border border-[#c9b99a] bg-[#f5f0e8] text-[#8b6f47] hover:bg-[#8b6f47] hover:text-white hover:border-[#8b6f47] transition-colors font-sans text-base leading-none cursor-pointer"
+            aria-label="Previous match"
+        >‹</button>
+        <button
+            id="ws-next"
+            class="hidden w-7 h-7 items-center justify-center rounded-lg border border-[#c9b99a] bg-[#f5f0e8] text-[#8b6f47] hover:bg-[#8b6f47] hover:text-white hover:border-[#8b6f47] transition-colors font-sans text-base leading-none cursor-pointer"
+            aria-label="Next match"
+        >›</button>
     </div>
 
     {
@@ -56,6 +66,8 @@ const strings = JSON.stringify({
         "word-search-input",
     ) as HTMLInputElement;
     const countEl = document.getElementById("word-search-count") as HTMLElement;
+    const prevBtn = document.getElementById("ws-prev") as HTMLButtonElement;
+    const nextBtn = document.getElementById("ws-next") as HTMLButtonElement;
 
     const container = input.closest("[data-ws-strings]") as HTMLElement;
     const strings = JSON.parse(container.dataset.wsStrings!);
@@ -71,8 +83,52 @@ const strings = JSON.stringify({
 
     const staticRaw = outputEl?.dataset.chars ?? "";
 
+    let currentIndex = 0;
+    let marks: HTMLElement[] = [];
+
     function getText() {
         return sourceEl ? (sourceEl.textContent ?? "") : staticRaw;
+    }
+
+    function getScrollContainer(): HTMLElement | null {
+        return highlightEl ?? outputEl ?? null;
+    }
+
+    function scrollToMark(mark: HTMLElement) {
+        const scrollEl = getScrollContainer();
+        if (!scrollEl) return;
+        const markRect = mark.getBoundingClientRect();
+        const containerRect = scrollEl.getBoundingClientRect();
+        const offset = markRect.top - containerRect.top - containerRect.height / 2 + markRect.height / 2;
+        scrollEl.scrollTop += offset;
+    }
+
+    function applyActive() {
+        marks.forEach((m, i) => {
+            if (i === currentIndex) {
+                m.style.background = "#f5d000";
+                m.style.color = "#1a1a1a";
+            } else {
+                m.style.background = "#8b6f47";
+                m.style.color = "white";
+            }
+        });
+        countEl.textContent = `${currentIndex + 1} / ${marks.length}`;
+        scrollToMark(marks[currentIndex]);
+    }
+
+    function showNav() {
+        prevBtn.classList.remove("hidden");
+        prevBtn.classList.add("flex");
+        nextBtn.classList.remove("hidden");
+        nextBtn.classList.add("flex");
+    }
+
+    function hideNav() {
+        prevBtn.classList.add("hidden");
+        prevBtn.classList.remove("flex");
+        nextBtn.classList.add("hidden");
+        nextBtn.classList.remove("flex");
     }
 
     input.addEventListener("input", () => {
@@ -81,6 +137,8 @@ const strings = JSON.stringify({
 
         if (!query) {
             countEl.textContent = "";
+            hideNav();
+            marks = [];
             if (sourceEl) {
                 sourceEl.classList.remove("hidden");
                 highlightEl?.classList.add("hidden");
@@ -90,20 +148,15 @@ const strings = JSON.stringify({
             return;
         }
 
-        const matches = text.match(new RegExp(escapeRegex(query), "gi"));
-        const count = matches ? matches.length : 0;
+        const matchList = text.match(new RegExp(escapeRegex(query), "gi"));
+        const count = matchList ? matchList.length : 0;
 
         if (query.toLowerCase() === "shakespeare" && count > 0)
             triggerShakespeare();
 
-        countEl.textContent =
-            count === 0
-                ? strings.zeroMatches
-                : `${count} ${count !== 1 ? strings.matches : strings.match}`;
-
         const highlighted = escapeHtml(text).replace(
             new RegExp(escapeRegex(escapeHtml(query)), "gi"),
-            (m) => `<mark class="bg-[#8b6f47] text-white rounded">${m}</mark>`,
+            (m) => `<mark style="background:#8b6f47;color:white;border-radius:2px">${m}</mark>`,
         );
 
         if (sourceEl && highlightEl) {
@@ -113,6 +166,30 @@ const strings = JSON.stringify({
         } else if (outputEl) {
             outputEl.innerHTML = highlighted;
         }
+
+        const scrollEl = getScrollContainer();
+        marks = scrollEl ? Array.from(scrollEl.querySelectorAll("mark")) : [];
+        currentIndex = 0;
+
+        if (count === 0) {
+            countEl.textContent = strings.zeroMatches;
+            hideNav();
+        } else {
+            showNav();
+            applyActive();
+        }
+    });
+
+    prevBtn.addEventListener("click", () => {
+        if (marks.length === 0) return;
+        currentIndex = (currentIndex - 1 + marks.length) % marks.length;
+        applyActive();
+    });
+
+    nextBtn.addEventListener("click", () => {
+        if (marks.length === 0) return;
+        currentIndex = (currentIndex + 1) % marks.length;
+        applyActive();
     });
 
     const lang = (container.dataset.lang || "es") as "es" | "en";
