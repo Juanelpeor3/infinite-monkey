@@ -32,12 +32,14 @@ const strings = JSON.stringify({
         ></span>
         <button
             id="ws-prev"
-            class="hidden w-7 h-7 items-center justify-center rounded-lg border border-[#c9b99a] bg-[#f5f0e8] text-[#8b6f47] hover:bg-[#8b6f47] hover:text-white hover:border-[#8b6f47] transition-colors font-sans text-base leading-none cursor-pointer"
+            style="display:none"
+            class="w-7 h-7 items-center justify-center rounded-lg border border-[#c9b99a] bg-[#f5f0e8] text-[#8b6f47] hover:bg-[#8b6f47] hover:text-white hover:border-[#8b6f47] transition-colors font-sans text-base leading-none cursor-pointer"
             aria-label="Previous match"
         >‹</button>
         <button
             id="ws-next"
-            class="hidden w-7 h-7 items-center justify-center rounded-lg border border-[#c9b99a] bg-[#f5f0e8] text-[#8b6f47] hover:bg-[#8b6f47] hover:text-white hover:border-[#8b6f47] transition-colors font-sans text-base leading-none cursor-pointer"
+            style="display:none"
+            class="w-7 h-7 items-center justify-center rounded-lg border border-[#c9b99a] bg-[#f5f0e8] text-[#8b6f47] hover:bg-[#8b6f47] hover:text-white hover:border-[#8b6f47] transition-colors font-sans text-base leading-none cursor-pointer"
             aria-label="Next match"
         >›</button>
     </div>
@@ -97,10 +99,11 @@ const strings = JSON.stringify({
     function scrollToMark(mark: HTMLElement) {
         const scrollEl = getScrollContainer();
         if (!scrollEl) return;
-        const markRect = mark.getBoundingClientRect();
-        const containerRect = scrollEl.getBoundingClientRect();
-        const offset = markRect.top - containerRect.top - containerRect.height / 2 + markRect.height / 2;
-        scrollEl.scrollTop += offset;
+        // Absolute position of the mark within the scrollable content
+        const markTop = mark.getBoundingClientRect().top
+            - scrollEl.getBoundingClientRect().top
+            + scrollEl.scrollTop;
+        scrollEl.scrollTop = markTop - scrollEl.clientHeight / 2 + mark.getBoundingClientRect().height / 2;
     }
 
     function applyActive() {
@@ -118,17 +121,13 @@ const strings = JSON.stringify({
     }
 
     function showNav() {
-        prevBtn.classList.remove("hidden");
-        prevBtn.classList.add("flex");
-        nextBtn.classList.remove("hidden");
-        nextBtn.classList.add("flex");
+        prevBtn.style.display = "flex";
+        nextBtn.style.display = "flex";
     }
 
     function hideNav() {
-        prevBtn.classList.add("hidden");
-        prevBtn.classList.remove("flex");
-        nextBtn.classList.add("hidden");
-        nextBtn.classList.remove("flex");
+        prevBtn.style.display = "none";
+        nextBtn.style.display = "none";
     }
 
     input.addEventListener("input", () => {
@@ -168,7 +167,7 @@ const strings = JSON.stringify({
         }
 
         const scrollEl = getScrollContainer();
-        marks = scrollEl ? Array.from(scrollEl.querySelectorAll("mark")) : [];
+        marks = scrollEl ? Array.from(scrollEl.querySelectorAll<HTMLElement>("mark")) : [];
         currentIndex = 0;
 
         if (count === 0) {
