@@ -10,6 +10,7 @@ interface Props {
     charsId?: string;
     badgeId?: string;
     lang?: Lang;
+    fullWidth?: boolean;
 }
 
 const {
@@ -18,13 +19,15 @@ const {
     charsId = "allChars",
     badgeId = "charBadge",
     lang = "es",
+    fullWidth = false,
 } = Astro.props;
 
-const t = translations[lang].charDisplay;
+const safeLang = (lang ?? "es") as Lang;
+const t = translations[safeLang].charDisplay;
 const isStatic = chars !== undefined;
 ---
 
-<div class="w-full lg:w-1/2 flex flex-col gap-3">
+<div class={`${fullWidth ? "w-full" : "w-full lg:w-1/2"} flex flex-col gap-3`}>
     <div class="flex items-center justify-between">
         <h2 class="text-lg sm:text-xl text-[#333] font-semibold">
             {t.title}
@@ -52,11 +55,11 @@ const isStatic = chars !== undefined;
                     {t.noChars}
                 </div>
             ) : (
-                <WordSearch chars={chars} lang={lang} />
+                <WordSearch chars={chars} lang={safeLang} />
             )
         ) : (
             <>
-                <WordSearch sourceId={charsId} lang={lang} />
+                <WordSearch sourceId={charsId} lang={safeLang} />
                 <pre
                     id={charsId}
                     aria-label="All generated characters"

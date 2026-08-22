@@ -8,8 +8,9 @@ interface Props {
 }
 
 const { lang = "es" } = Astro.props;
-const t = translations[lang].monkeyBot;
-const dateLocale = lang === "es" ? "es-ES" : "en-GB";
+const safeLang = (lang ?? "es") as Lang;
+const t = translations[safeLang].monkeyBot;
+const dateLocale = safeLang === "es" ? "es-ES" : "en-GB";
 
 const { chars, total, lastUpdated } = data;
 const words = chars
@@ -25,60 +26,83 @@ const lastUpdatedFormatted = lastUpdated
 ---
 
 <div
-    class="max-w-5xl mx-auto mt-8 sm:mt-16 px-4 sm:px-8 font-serif text-[#222]"
+    class="max-w-2xl mx-auto mt-8 sm:mt-14 px-4 sm:px-6 font-serif text-[#222]"
 >
-    <h1
-        class="text-3xl sm:text-4xl md:text-5xl text-center mb-2 text-[#1a1a1a] tracking-tight"
-    >
-        {t.title}
-    </h1>
-    <p
-        class="text-center text-[#8b6f47] font-sans mb-6 sm:mb-10 text-xs sm:text-sm tracking-widest uppercase px-2"
-    >
-        {t.subtitle}
-    </p>
-
-    <div class="flex flex-col lg:flex-row gap-6 lg:gap-8 items-stretch">
-        <!-- Left: stats -->
-        <div
-            class="w-full lg:w-1/2 bg-[#f5f0e8] border-l-4 border-[#8b6f47] px-5 sm:px-8 py-6 sm:py-8 rounded-lg flex flex-col gap-6 sm:gap-8"
+    <div class="text-center mb-7 sm:mb-9">
+        <h1
+            class="text-3xl sm:text-4xl md:text-5xl text-[#1a1a1a] tracking-tight mb-2"
         >
-            <h2 class="text-lg sm:text-xl text-[#333] font-semibold">{t.stats}</h2>
-
-            <div class="flex gap-6 sm:gap-8 flex-wrap">
-                <div>
-                    <p class="text-xs uppercase tracking-widest text-[#8b6f47] mb-1">
-                        {t.totalChars}
-                    </p>
-                    <p class="text-3xl sm:text-4xl font-mono text-[#1a1a1a] leading-none">
-                        {total}
-                    </p>
-                </div>
-                <div>
-                    <p class="text-xs uppercase tracking-widest text-[#8b6f47] mb-1">
-                        {t.words}
-                    </p>
-                    <p class="text-3xl sm:text-4xl font-mono text-[#1a1a1a] leading-none">
-                        {words}
-                    </p>
-                </div>
-            </div>
-
-            <div>
-                <p class="text-xs uppercase tracking-widest text-[#8b6f47] mb-1">
-                    {t.lastUpdated}
-                </p>
-                <p class="text-base sm:text-lg font-mono text-[#1a1a1a]">
-                    {lastUpdatedFormatted}
-                </p>
-            </div>
-
-            <div class="mt-auto text-xs font-sans text-[#999] leading-relaxed">
-                {t.footer}
-            </div>
-        </div>
-
-        <!-- Right: all characters -->
-        <CharDisplay chars={chars} total={total} lang={lang} />
+            {t.title}
+        </h1>
+        <p
+            class="text-[#8b6f47] font-sans text-xs sm:text-sm tracking-widest uppercase"
+        >
+            {t.subtitle}
+        </p>
     </div>
+
+    <!-- Stat cards -->
+    <div class="grid grid-cols-2 gap-3 sm:gap-4 mb-3 sm:mb-4">
+        <div
+            class="bg-white rounded-xl border border-[#d5c8b5] px-5 py-4 sm:px-6 sm:py-5 shadow-sm"
+        >
+            <p
+                class="text-[10px] sm:text-xs uppercase tracking-widest text-[#8b6f47] mb-1.5 font-sans"
+            >
+                {t.totalChars}
+            </p>
+            <p
+                class="text-2xl sm:text-3xl font-mono text-[#1a1a1a] leading-none"
+            >
+                {total}
+            </p>
+        </div>
+        <div
+            class="bg-white rounded-xl border border-[#d5c8b5] px-5 py-4 sm:px-6 sm:py-5 shadow-sm"
+        >
+            <p
+                class="text-[10px] sm:text-xs uppercase tracking-widest text-[#8b6f47] mb-1.5 font-sans"
+            >
+                {t.words}
+            </p>
+            <p
+                class="text-2xl sm:text-3xl font-mono text-[#1a1a1a] leading-none"
+            >
+                {words}
+            </p>
+        </div>
+    </div>
+
+    <!-- Last updated strip -->
+    <div
+        class="bg-white rounded-xl border border-[#d5c8b5] px-5 py-3.5 mb-4 flex items-center justify-between shadow-sm"
+    >
+        <p
+            class="text-[10px] sm:text-xs uppercase tracking-widest text-[#8b6f47] font-sans"
+        >
+            {t.lastUpdated}
+        </p>
+        <p class="font-mono text-sm text-[#1a1a1a]">{lastUpdatedFormatted}</p>
+    </div>
+
+    <!-- Character display card -->
+    <div
+        class="bg-white rounded-2xl border border-[#d5c8b5] shadow-lg overflow-hidden"
+    >
+        <div class="px-5 sm:px-7 py-5">
+            <CharDisplay
+                chars={chars}
+                total={total}
+                lang={safeLang}
+                fullWidth
+            />
+        </div>
+    </div>
+
+    <!-- Footer note -->
+    <p
+        class="mt-5 text-xs font-sans text-[#b0926a] leading-relaxed text-center"
+    >
+        {t.footer}
+    </p>
 </div>
