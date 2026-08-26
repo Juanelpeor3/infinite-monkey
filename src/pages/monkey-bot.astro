@@ -1,5 +1,6 @@
 ---
 import MonkeyBot from "../components/MonkeyBot.astro";
+import ScrollToTop from "../components/ScrollToTop.astro";
 import Layout from "../layouts/Layout.astro";
 import { translations } from "../i18n/translations";
 
@@ -17,4 +18,5 @@ const t = translations[lang];
             {t.nav.back}
         </a>
     </div>
+    <ScrollToTop />
 </Layout>
