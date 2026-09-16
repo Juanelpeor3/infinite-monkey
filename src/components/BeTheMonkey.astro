@@ -9,87 +9,94 @@ interface Props {
 const { lang = "es" } = Astro.props;
 const safeLang = (lang ?? "es") as Lang;
 const t = translations[safeLang].beTheMonkey;
+const tNav = translations[safeLang].nav;
 ---
 
-<div class="max-w-xl mx-auto mt-8 sm:mt-14 px-4 sm:px-6 font-serif text-[#222]">
-    <div class="text-center mb-7 sm:mb-9">
+<div
+    class="flex-1 flex flex-col overflow-hidden min-h-0 px-4 sm:px-6 py-2 max-w-4xl mx-auto w-full"
+>
+    <div class="shrink-0 text-center mb-2">
         <h1
-            class="text-3xl sm:text-4xl md:text-5xl text-[#1a1a1a] tracking-tight mb-2"
+            class="text-2xl sm:text-3xl text-[#1a1a1a] tracking-tight font-serif"
         >
             {t.title}
         </h1>
-        <p
-            class="text-[#8b6f47] font-sans text-xs sm:text-sm tracking-widest uppercase"
-        >
+        <p class="text-[#8b6f47] font-sans text-xs tracking-widest uppercase">
             {t.subtitle}
         </p>
     </div>
 
-    <div class="rounded-2xl overflow-hidden shadow-xl border border-[#d5c8b5]">
-        <!-- Dark hero: current char + stats -->
+    <div
+        class="flex-1 flex flex-col min-h-0 rounded-xl overflow-hidden border border-[#d5c8b5] shadow-lg"
+    >
         <div
-            class="bg-[#3d2b1a] px-6 sm:px-8 py-6 sm:py-8 flex items-center gap-7 sm:gap-10"
+            class="shrink-0 bg-[#3d2b1a] px-4 sm:px-6 py-3 sm:py-4 flex items-center gap-6 sm:gap-8"
         >
             <div
                 id="actualChar"
                 aria-live="polite"
                 aria-label="Current character"
-                class="w-20 h-20 sm:w-24 sm:h-24 shrink-0 bg-[#8b6f47] rounded-xl flex items-center justify-center text-4xl sm:text-5xl font-mono text-white shadow-inner border-2 border-[#a07d55]"
+                class="w-14 h-14 sm:w-16 sm:h-16 shrink-0 bg-[#8b6f47] rounded-lg flex items-center justify-center text-2xl sm:text-3xl font-mono text-white shadow-inner border-2 border-[#a07d55]"
             >
-                —
+                &mdash;
             </div>
-            <div class="flex gap-8 sm:gap-10">
-                <div>
-                    <p
-                        class="text-[10px] sm:text-xs uppercase tracking-widest text-[#a07d55] mb-1 font-sans"
-                    >
-                        {t.total}
-                    </p>
-                    <p
-                        id="totalNum"
-                        class="text-3xl sm:text-4xl font-mono text-white leading-none"
-                    >
-                        0
-                    </p>
-                </div>
-                <div>
-                    <p
-                        class="text-[10px] sm:text-xs uppercase tracking-widest text-[#a07d55] mb-1 font-sans"
-                    >
-                        {t.words}
-                    </p>
-                    <p
-                        id="wordCount"
-                        class="text-3xl sm:text-4xl font-mono text-white leading-none"
-                    >
-                        0
-                    </p>
-                </div>
+            <div>
+                <p
+                    class="text-[10px] uppercase tracking-widest text-[#dbd3c9] mb-0.5 font-sans"
+                >
+                    {t.total}
+                </p>
+                <p
+                    id="totalNum"
+                    class="text-2xl sm:text-3xl font-mono text-white leading-none"
+                >
+                    0
+                </p>
+            </div>
+            <div>
+                <p
+                    class="text-[10px] uppercase tracking-widest text-[#dbd3c9] mb-0.5 font-sans"
+                >
+                    {t.words}
+                </p>
+                <p
+                    id="wordCount"
+                    class="text-2xl sm:text-3xl font-mono text-white leading-none"
+                >
+                    0
+                </p>
             </div>
         </div>
 
-        <!-- Controls -->
         <div
-            class="bg-[#f5f0e8] px-5 sm:px-7 py-4 flex gap-3 border-t border-b border-[#ddd0c0]"
+            class="shrink-0 bg-[#f5f0e8] px-4 sm:px-6 py-3 flex gap-3 border-b border-[#ddd0c0]"
         >
             <button
                 id="newChar"
-                class="flex-1 bg-[#8b6f47] hover:bg-[#6b5237] active:scale-95 text-white py-3.5 rounded-xl font-sans text-base font-medium transition-all cursor-pointer"
+                class="flex-1 bg-[#8b6f47] hover:bg-[#6b5237] active:scale-95 text-white py-3 rounded-lg font-sans text-sm font-medium transition-all cursor-pointer"
             >
                 {t.addChar}
             </button>
             <button
                 id="clearBtn"
-                class="bg-white hover:bg-red-50 active:scale-95 border border-red-200 text-red-400 hover:text-red-600 py-3.5 px-5 rounded-xl font-sans text-sm transition-all cursor-pointer whitespace-nowrap"
+                class="bg-white hover:bg-red-50 active:scale-95 border border-red-200 text-red-400 hover:text-red-600 py-3 px-5 rounded-lg font-sans text-sm transition-all cursor-pointer whitespace-nowrap"
             >
                 {t.clearAll}
             </button>
         </div>
 
-        <!-- Character display -->
-        <div class="bg-white px-5 sm:px-7 py-5">
-            <CharDisplay lang={safeLang} fullWidth />
+        <div class="flex-1 flex flex-col min-h-0 bg-white px-4 sm:px-6 py-3">
+            <CharDisplay lang={safeLang} />
         </div>
+    </div>
+
+    <div class="shrink-0 text-center py-2">
+        <a
+            href={safeLang === "en" ? "/en" : "/"}
+            class="text-xs font-sans text-[#b0926a] hover:text-[#8b6f47] transition-colors"
+        >
+            {tNav.back}
+        </a>
     </div>
 </div>
 
@@ -138,13 +145,13 @@ const t = translations[safeLang].beTheMonkey;
     ];
 
     function updateStats() {
-        totalNum!.textContent = String(totalChars);
-        charBadge!.textContent = String(totalChars);
+        totalNum!.textContent = totalChars.toLocaleString();
+        charBadge!.textContent = totalChars.toLocaleString();
         const words = (allChars!.textContent ?? "")
             .trim()
             .split(/[\s\n]+/)
             .filter((w) => w.length > 0).length;
-        wordCount!.textContent = String(words);
+        wordCount!.textContent = words.toLocaleString();
     }
 
     if (actualChar && totalNum && allChars && newCharBtn && clearBtn) {

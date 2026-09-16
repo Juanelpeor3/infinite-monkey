@@ -10,6 +10,7 @@ interface Props {
 const { lang = "es" } = Astro.props;
 const safeLang = (lang ?? "es") as Lang;
 const t = translations[safeLang].monkeyBot;
+const tNav = translations[safeLang].nav;
 const dateLocale = safeLang === "es" ? "es-ES" : "en-GB";
 
 const { chars, total, lastUpdated } = data;
@@ -17,6 +18,8 @@ const words = chars
     .trim()
     .split(/[\s\n]+/)
     .filter((w: string) => w.length > 0).length;
+const formattedTotal = total.toLocaleString(dateLocale);
+const formattedWords = words.toLocaleString(dateLocale);
 const lastUpdatedFormatted = lastUpdated
     ? new Date(lastUpdated).toLocaleString(dateLocale, {
           dateStyle: "medium",
@@ -26,83 +29,75 @@ const lastUpdatedFormatted = lastUpdated
 ---
 
 <div
-    class="max-w-2xl mx-auto mt-8 sm:mt-14 px-4 sm:px-6 font-serif text-[#222]"
+    class="flex-1 flex flex-col overflow-hidden min-h-0 px-4 sm:px-6 py-2 max-w-4xl mx-auto w-full"
 >
-    <div class="text-center mb-7 sm:mb-9">
+    <div class="shrink-0 text-center mb-2">
         <h1
-            class="text-3xl sm:text-4xl md:text-5xl text-[#1a1a1a] tracking-tight mb-2"
+            class="text-2xl sm:text-3xl text-[#1a1a1a] tracking-tight font-serif"
         >
             {t.title}
         </h1>
-        <p
-            class="text-[#8b6f47] font-sans text-xs sm:text-sm tracking-widest uppercase"
-        >
+        <p class="text-[#8b6f47] font-sans text-xs tracking-widest uppercase">
             {t.subtitle}
         </p>
     </div>
 
-    <!-- Stat cards -->
-    <div class="grid grid-cols-2 gap-3 sm:gap-4 mb-3 sm:mb-4">
+    <div
+        class="flex-1 flex flex-col min-h-0 rounded-xl overflow-hidden border border-[#d5c8b5] shadow-lg"
+    >
         <div
-            class="bg-white rounded-xl border border-[#d5c8b5] px-5 py-4 sm:px-6 sm:py-5 shadow-sm"
+            class="shrink-0 bg-[#3d2b1a] px-4 sm:px-6 py-3 sm:py-4 flex flex-wrap items-center gap-5 sm:gap-8"
         >
-            <p
-                class="text-[10px] sm:text-xs uppercase tracking-widest text-[#8b6f47] mb-1.5 font-sans"
-            >
-                {t.totalChars}
-            </p>
-            <p
-                class="text-2xl sm:text-3xl font-mono text-[#1a1a1a] leading-none"
-            >
-                {total}
-            </p>
+            <div>
+                <p
+                    class="text-[10px] uppercase tracking-widest text-[#dbd3c9] mb-0.5 font-sans"
+                >
+                    {t.totalChars}
+                </p>
+                <p
+                    class="text-2xl sm:text-3xl font-mono text-white leading-none"
+                >
+                    {formattedTotal}
+                </p>
+            </div>
+            <div>
+                <p
+                    class="text-[10px] uppercase tracking-widest text-[#dbd3c9] mb-0.5 font-sans"
+                >
+                    {t.words}
+                </p>
+                <p
+                    class="text-2xl sm:text-3xl font-mono text-white leading-none"
+                >
+                    {formattedWords}
+                </p>
+            </div>
+            <div class="sm:ml-auto">
+                <p
+                    class="text-[10px] uppercase tracking-widest text-[#dbd3c9] mb-0.5 font-sans"
+                >
+                    {t.lastUpdated}
+                </p>
+                <p class="text-sm font-mono text-white/80">
+                    {lastUpdatedFormatted}
+                </p>
+            </div>
         </div>
-        <div
-            class="bg-white rounded-xl border border-[#d5c8b5] px-5 py-4 sm:px-6 sm:py-5 shadow-sm"
-        >
-            <p
-                class="text-[10px] sm:text-xs uppercase tracking-widest text-[#8b6f47] mb-1.5 font-sans"
-            >
-                {t.words}
-            </p>
-            <p
-                class="text-2xl sm:text-3xl font-mono text-[#1a1a1a] leading-none"
-            >
-                {words}
-            </p>
+
+        <div class="flex-1 flex flex-col min-h-0 bg-white px-4 sm:px-6 py-3">
+            <CharDisplay chars={chars} total={total} lang={safeLang} />
         </div>
     </div>
 
-    <!-- Last updated strip -->
-    <div
-        class="bg-white rounded-xl border border-[#d5c8b5] px-5 py-3.5 mb-4 flex items-center justify-between shadow-sm"
-    >
-        <p
-            class="text-[10px] sm:text-xs uppercase tracking-widest text-[#8b6f47] font-sans"
-        >
-            {t.lastUpdated}
+    <div class="shrink-0 text-center py-2">
+        <p class="text-[10px] font-sans text-[#b0926a] mb-1 leading-relaxed">
+            {t.footer}
         </p>
-        <p class="font-mono text-sm text-[#1a1a1a]">{lastUpdatedFormatted}</p>
+        <a
+            href={safeLang === "en" ? "/en" : "/"}
+            class="text-xs font-sans text-[#b0926a] hover:text-[#8b6f47] transition-colors"
+        >
+            {tNav.back}
+        </a>
     </div>
-
-    <!-- Character display card -->
-    <div
-        class="bg-white rounded-2xl border border-[#d5c8b5] shadow-lg overflow-hidden"
-    >
-        <div class="px-5 sm:px-7 py-5">
-            <CharDisplay
-                chars={chars}
-                total={total}
-                lang={safeLang}
-                fullWidth
-            />
-        </div>
-    </div>
-
-    <!-- Footer note -->
-    <p
-        class="mt-5 text-xs font-sans text-[#b0926a] leading-relaxed text-center"
-    >
-        {t.footer}
-    </p>
 </div>

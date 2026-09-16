@@ -3,14 +3,11 @@ import WordSearch from "./WordSearch.astro";
 import { translations, type Lang } from "../i18n/translations";
 
 interface Props {
-    // Static mode (MonkeyBot)
     chars?: string;
     total?: number;
-    // Dynamic mode (BeTheMonkey)
     charsId?: string;
     badgeId?: string;
     lang?: Lang;
-    fullWidth?: boolean;
 }
 
 const {
@@ -19,23 +16,31 @@ const {
     charsId = "allChars",
     badgeId = "charBadge",
     lang = "es",
-    fullWidth = false,
 } = Astro.props;
 
 const safeLang = (lang ?? "es") as Lang;
 const t = translations[safeLang].charDisplay;
 const isStatic = chars !== undefined;
+
+function escapeHtml(str: string) {
+    return str
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+}
 ---
 
-<div class={`${fullWidth ? "w-full" : "w-full lg:w-1/2"} flex flex-col gap-3`}>
-    <div class="flex items-center justify-between">
-        <h2 class="text-lg sm:text-xl text-[#333] font-semibold">
+<div class="flex-1 flex flex-col min-h-0 gap-2">
+    <div class="shrink-0 flex items-center justify-between">
+        <h2
+            class="text-sm sm:text-base text-[#333] font-semibold font-sans uppercase tracking-wider"
+        >
             {t.title}
         </h2>
         {
             isStatic ? (
                 <span class="text-xs font-sans bg-[#8b6f47] text-white px-3 py-1 rounded-full">
-                    {total}
+                    {total?.toLocaleString()}
                 </span>
             ) : (
                 <span
@@ -50,20 +55,37 @@ const isStatic = chars !== undefined;
 
     {
         isStatic ? (
+            <WordSearch lang={safeLang} />
+        ) : (
+            <WordSearch sourceId={charsId} lang={safeLang} />
+        )
+    }
+
+    {
+        isStatic ? (
             total === 0 ? (
-                <div class="bg-[#1e1e1e] text-[#666] px-4 sm:px-6 py-4 sm:py-5 rounded-lg text-base sm:text-lg font-mono h-56 sm:h-72 lg:h-80 flex items-center justify-center text-center">
+                <div class="flex-1 min-h-0 bg-[#1e1e1e] text-[#666] px-4 sm:px-6 py-4 rounded-lg font-mono flex items-center justify-center text-center">
                     {t.noChars}
                 </div>
             ) : (
-                <WordSearch chars={chars} lang={safeLang} />
+                <pre
+                    id="word-search-output"
+                    data-chars={chars}
+                    class="flex-1 min-h-0 overflow-y-auto bg-[#1e1e1e] text-[#d4d4d4] px-4 sm:px-6 py-4 rounded-lg text-sm sm:text-base font-mono whitespace-pre-wrap leading-relaxed"
+                    set:html={escapeHtml(chars!)}
+                />
             )
         ) : (
             <>
-                <WordSearch sourceId={charsId} lang={safeLang} />
+                <pre
+                    id="word-search-highlight"
+                    style="display:none"
+                    class="flex-1 min-h-0 overflow-y-auto bg-[#1e1e1e] text-[#d4d4d4] px-4 sm:px-6 py-4 rounded-lg text-sm sm:text-base font-mono whitespace-pre-wrap leading-relaxed"
+                />
                 <pre
                     id={charsId}
                     aria-label="All generated characters"
-                    class="bg-[#1e1e1e] text-[#d4d4d4] px-4 sm:px-6 py-4 sm:py-5 rounded-lg text-base sm:text-lg font-mono whitespace-pre-wrap w-full flex-1 h-56 sm:h-72 lg:h-80 overflow-y-auto leading-relaxed"
+                    class="flex-1 min-h-0 overflow-y-auto bg-[#1e1e1e] text-[#d4d4d4] px-4 sm:px-6 py-4 rounded-lg text-sm sm:text-base font-mono whitespace-pre-wrap leading-relaxed"
                 />
             </>
         )

@@ -2,12 +2,11 @@
 import { translations, type Lang } from "../i18n/translations";
 
 interface Props {
-    chars?: string;
     sourceId?: string;
     lang?: Lang;
 }
 
-const { chars, sourceId, lang = "es" } = Astro.props;
+const { sourceId, lang = "es" } = Astro.props;
 const safeLang = (lang ?? "es") as Lang;
 const t = translations[safeLang].wordSearch;
 const strings = JSON.stringify({
@@ -18,50 +17,33 @@ const strings = JSON.stringify({
 });
 ---
 
-<div class="flex flex-col gap-3" data-ws-strings={strings} data-lang={safeLang}>
-    <div class="flex items-center gap-2">
-        <input
-            id="word-search-input"
-            type="text"
-            placeholder={t.placeholder}
-            data-source-id={sourceId ?? ""}
-            class="flex-1 bg-[#f5f0e8] border border-[#c9b99a] rounded-lg px-4 py-2 font-mono text-sm text-[#1a1a1a] placeholder-[#b0926a] focus:outline-none focus:border-[#8b6f47]"
-        />
-        <span
-            id="word-search-count"
-            class="text-xs font-sans text-[#8b6f47] whitespace-nowrap"
-        ></span>
-        <button
-            id="ws-prev"
-            style="display:none"
-            class="w-7 h-7 items-center justify-center rounded-lg border border-[#c9b99a] bg-[#f5f0e8] text-[#8b6f47] hover:bg-[#8b6f47] hover:text-white hover:border-[#8b6f47] transition-colors font-sans text-base leading-none cursor-pointer"
-            aria-label="Previous match"
-        >‹</button>
-        <button
-            id="ws-next"
-            style="display:none"
-            class="w-7 h-7 items-center justify-center rounded-lg border border-[#c9b99a] bg-[#f5f0e8] text-[#8b6f47] hover:bg-[#8b6f47] hover:text-white hover:border-[#8b6f47] transition-colors font-sans text-base leading-none cursor-pointer"
-            aria-label="Next match"
-        >›</button>
-    </div>
-
-    {
-        sourceId ? (
-            <pre
-                id="word-search-highlight"
-                aria-hidden="true"
-                class="hidden bg-[#1e1e1e] text-[#d4d4d4] px-4 sm:px-6 py-4 sm:py-5 rounded-lg text-base sm:text-lg font-mono whitespace-pre-wrap w-full flex-1 h-56 sm:h-72 lg:h-80 overflow-y-auto leading-relaxed"
-            />
-        ) : (
-            <pre
-                id="word-search-output"
-                class="bg-[#1e1e1e] text-[#d4d4d4] px-4 sm:px-6 py-4 sm:py-5 rounded-lg text-base sm:text-lg font-mono whitespace-pre-wrap w-full flex-1 h-56 sm:h-72 lg:h-80 overflow-y-auto leading-relaxed"
-                data-chars={chars}
-            >
-                {chars || t.noChars}
-            </pre>
-        )
-    }
+<div
+    class="shrink-0 flex items-center gap-2"
+    data-ws-strings={strings}
+    data-lang={safeLang}
+>
+    <input
+        id="word-search-input"
+        type="text"
+        placeholder={t.placeholder}
+        data-source-id={sourceId ?? ""}
+        class="flex-1 bg-[#f5f0e8] border border-[#d5c8b5] rounded-lg px-4 py-2 font-mono text-sm text-[#1a1a1a] placeholder-[#a07d55] focus:outline-none focus:border-[#8b6f47]"
+    />
+    <span
+        id="word-search-count"
+        class="text-xs font-sans text-[#a07d55] whitespace-nowrap"></span>
+    <button
+        id="ws-prev"
+        style="display:none"
+        class="w-7 h-7 items-center justify-center rounded-lg border border-[#d5c8b5] bg-[#f5f0e8] text-[#8b6f47] hover:bg-[#8b6f47] hover:text-white hover:border-[#8b6f47] transition-colors font-sans text-base leading-none cursor-pointer"
+        aria-label="Previous match">&#8249;</button
+    >
+    <button
+        id="ws-next"
+        style="display:none"
+        class="w-7 h-7 items-center justify-center rounded-lg border border-[#d5c8b5] bg-[#f5f0e8] text-[#8b6f47] hover:bg-[#8b6f47] hover:text-white hover:border-[#8b6f47] transition-colors font-sans text-base leading-none cursor-pointer"
+        aria-label="Next match">&#8250;</button
+    >
 </div>
 
 <script>
@@ -93,7 +75,7 @@ const strings = JSON.stringify({
         return sourceEl ? (sourceEl.textContent ?? "") : staticRaw;
     }
 
-    function getScrollContainer(): HTMLElement | null {
+    function getDisplayEl(): HTMLElement | null {
         return highlightEl ?? outputEl ?? null;
     }
 
@@ -104,7 +86,7 @@ const strings = JSON.stringify({
     function applyActive() {
         marks.forEach((m, i) => {
             if (i === currentIndex) {
-                m.style.background = "#f5d000";
+                m.style.background = "#facc15";
                 m.style.color = "#1a1a1a";
             } else {
                 m.style.background = "#8b6f47";
@@ -134,8 +116,8 @@ const strings = JSON.stringify({
             hideNav();
             marks = [];
             if (sourceEl) {
-                sourceEl.classList.remove("hidden");
-                highlightEl?.classList.add("hidden");
+                sourceEl.style.display = "";
+                if (highlightEl) highlightEl.style.display = "none";
             } else if (outputEl) {
                 outputEl.innerHTML = escapeHtml(text) || strings.noChars;
             }
@@ -150,19 +132,22 @@ const strings = JSON.stringify({
 
         const highlighted = escapeHtml(text).replace(
             new RegExp(escapeRegex(escapeHtml(query)), "gi"),
-            (m) => `<mark style="background:#8b6f47;color:white;border-radius:2px">${m}</mark>`,
+            (m) =>
+                `<mark style="background:#8b6f47;color:white;border-radius:2px">${m}</mark>`,
         );
 
         if (sourceEl && highlightEl) {
             highlightEl.innerHTML = highlighted;
-            sourceEl.classList.add("hidden");
-            highlightEl.classList.remove("hidden");
+            sourceEl.style.display = "none";
+            highlightEl.style.display = "";
         } else if (outputEl) {
             outputEl.innerHTML = highlighted;
         }
 
-        const scrollEl = getScrollContainer();
-        marks = scrollEl ? Array.from(scrollEl.querySelectorAll<HTMLElement>("mark")) : [];
+        const displayEl = getDisplayEl();
+        marks = displayEl
+            ? Array.from(displayEl.querySelectorAll<HTMLElement>("mark"))
+            : [];
         currentIndex = 0;
 
         if (count === 0) {
@@ -189,7 +174,7 @@ const strings = JSON.stringify({
     const lang = (container.dataset.lang || "es") as "es" | "en";
     const shakespeareMsgs = {
         es: {
-            title: "¡Lo consiguió!",
+            title: "\u00a1Lo consigui\u00f3!",
             msg: "El mono ha escrito SHAKESPEARE.\nEl teorema es real.",
             close: "Haz clic para cerrar",
         },
@@ -209,8 +194,8 @@ const strings = JSON.stringify({
             "position:fixed;inset:0;background:rgba(0,0,0,0.88);display:flex;align-items:center;justify-content:center;z-index:9999;cursor:pointer;";
         overlay.innerHTML = `
             <div style="text-align:center;color:white;font-family:serif;padding:2rem;max-width:420px">
-                <div style="font-size:3.5rem;margin-bottom:1rem">🎉🐒🎉</div>
-                <h2 style="font-size:2rem;margin-bottom:1rem;color:#f5d000;font-family:serif">${sm.title}</h2>
+                <div style="font-size:3.5rem;margin-bottom:1rem">\u{1F389}\u{1F412}\u{1F389}</div>
+                <h2 style="font-size:2rem;margin-bottom:1rem;color:#facc15;font-family:serif">${sm.title}</h2>
                 <p style="font-size:1.1rem;color:#d4d4d4;white-space:pre-line;line-height:1.6">${sm.msg}</p>
                 <p style="margin-top:2rem;font-size:0.75rem;color:#666;font-family:sans-serif">${sm.close}</p>
             </div>`;
@@ -225,9 +210,9 @@ const strings = JSON.stringify({
             "@keyframes confettiFall{to{transform:translateY(110vh) rotate(720deg);opacity:0}}";
         document.head.appendChild(style);
         const colors = [
-            "#f5d000",
+            "#facc15",
             "#8b6f47",
-            "#d4d4d4",
+            "#d5c8b5",
             "#ff6b6b",
             "#4ecdc4",
             "#fff",

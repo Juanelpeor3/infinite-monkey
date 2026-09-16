@@ -1,22 +1,10 @@
 ---
 import MonkeyBot from "../../components/MonkeyBot.astro";
-import ScrollToTop from "../../components/ScrollToTop.astro";
 import Layout from "../../layouts/Layout.astro";
-import { translations } from "../../i18n/translations";
 
 const lang = "en" as const;
-const t = translations[lang];
 ---
 
-<Layout lang={lang}>
+<Layout lang={lang} fullHeight>
     <MonkeyBot lang={lang} />
-    <div class="text-center mt-12 mb-15">
-        <a
-            href="/en"
-            class="inline-block bg-[#8b6f47] hover:bg-[#6b5237] text-white px-8 py-3.5 rounded-lg text-[1.1rem] font-sans no-underline transition-colors"
-        >
-            {t.nav.back}
-        </a>
-    </div>
-    <ScrollToTop />
 </Layout>
